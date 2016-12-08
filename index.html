@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Resume by zhangcheng861025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Resume</h1>
+      <h2 class="project-tagline">Resume</h2>
+      <a href="https://github.com/zhangcheng861025/resume" class="btn">View on GitHub</a>
+      <a href="https://github.com/zhangcheng861025/resume/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/zhangcheng861025/resume/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="读写分离" class="anchor" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>读写分离</h1>
+
+<h2>
+<a id="采用数据库中间件mycat来做中间层" class="anchor" href="#%E9%87%87%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6mycat%E6%9D%A5%E5%81%9A%E4%B8%AD%E9%97%B4%E5%B1%82" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>采用数据库中间件Mycat来做中间层</h2>
+
+<ul>
+<li>对原有系统没有任何代码和配置的 <code>入侵</code>，耦合度最低；</li>
+<li>通过 <code>SHOW SLAVE STATUS</code>提供心跳机制，保证主从数据库在down掉其中一台时，依旧保证高可用，这是项目给中配置多数据源较难完成的任务；</li>
+<li>可以根据主从延时较高时读从从库切到主库，待延时恢复后再切换到从库读取数据;</li>
+<li> <code>如果某些对实时要求很高的读业务，比如毫秒级的，可以强制读主，最简单的实现就是代码层加入事务</code> 。</li>
+</ul>
+
+<h2>
+<a id="测试环境" class="anchor" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>测试环境</h2>
+
+<h3>
+<a id="mycat部署在1921680107目录optmycatssh账号密码root123456查看日志----tail--f-optmycat_16logsmycatlog" class="anchor" href="#mycat%E9%83%A8%E7%BD%B2%E5%9C%A81921680107%E7%9B%AE%E5%BD%95optmycatssh%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81root123456%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97----tail--f-optmycat_16logsmycatlog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mycat部署在192.168.0.107,目录/opt/mycat/，SSH账号/密码:root/123456,查看日志:    tail -f /opt/mycat_1.6/logs/mycat.log</h3>
+
+<h3>
+<a id="对应的主库1921680253307dotdotbuy-从3307dotdotbuy拷贝的jdbc千万不要连这个库不然使用不了mycat的读写分离账号密码writerdaigou123db" class="anchor" href="#%E5%AF%B9%E5%BA%94%E7%9A%84%E4%B8%BB%E5%BA%931921680253307dotdotbuy-%E4%BB%8E3307dotdotbuy%E6%8B%B7%E8%B4%9D%E7%9A%84jdbc%E5%8D%83%E4%B8%87%E4%B8%8D%E8%A6%81%E8%BF%9E%E8%BF%99%E4%B8%AA%E5%BA%93%E4%B8%8D%E7%84%B6%E4%BD%BF%E7%94%A8%E4%B8%8D%E4%BA%86mycat%E7%9A%84%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81writerdaigou123db" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>对应的主库:192.168.0.25:3307/dotdotbuy <code>从3307/dotdotbuy拷贝的，JDBC千万不要连这个库,不然使用不了mycat的读写分离</code>，账号/密码:writer/daigou@123Db</h3>
+
+<h3>
+<a id="对应的从库19216801073307dotdotbuy-账号密码writerdaigou123dbjdbc千万不要连这个库不然主从数据库就不同步了" class="anchor" href="#%E5%AF%B9%E5%BA%94%E7%9A%84%E4%BB%8E%E5%BA%9319216801073307dotdotbuy-%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81writerdaigou123dbjdbc%E5%8D%83%E4%B8%87%E4%B8%8D%E8%A6%81%E8%BF%9E%E8%BF%99%E4%B8%AA%E5%BA%93%E4%B8%8D%E7%84%B6%E4%B8%BB%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B0%B1%E4%B8%8D%E5%90%8C%E6%AD%A5%E4%BA%86" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>对应的从库:192.168.0.107:3307/dotdotbuy 账号/密码:writer/daigou@123Db,<code>JDBC千万不要连这个库,不然主从数据库就不同步了</code>
+</h3>
+
+<h2>
+<a id="jdbc配置" class="anchor" href="#jdbc%E9%85%8D%E7%BD%AE" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JDBC配置</h2>
+
+<ul>
+<li>ddb.XXX.jdbc.url=jdbc:mysql://192.168.0.107:8099/dotdotbuy?useUnicode=true&amp;characterEncoding=utf-8</li>
+<li>ddb.XXX.jdbc.username=writer</li>
+<li>ddb.XXX.jdbc.password=daigou@123Db</li>
+</ul>
+
+<h2>
+<a id="mycat高可用" class="anchor" href="#mycat%E9%AB%98%E5%8F%AF%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mycat高可用</h2>
+
+<ul>
+<li>mycat本身不支持高可用，需要借助lvs或HAProxy来做代理保证高可用</li>
+<li>lvs或HAProxy本身需要虚拟IP keepalived，目前外网服务器不支持虚拟IP， <code>待解决高可用问题</code>
+</li>
+</ul>
+
+<h1>
+<a id="分片未完待续" class="anchor" href="#%E5%88%86%E7%89%87%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>分片(未完待续)</h1>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/zhangcheng861025/resume">Resume</a> is maintained by <a href="https://github.com/zhangcheng861025">zhangcheng861025</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
